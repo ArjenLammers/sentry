@@ -1,0 +1,32 @@
+{
+  "name": "sentry",
+  "widgetName": "Sentry",
+  "version": "1.0.0",
+  "description": "Sentry",
+  "copyright": "2020 Mendix Technology BV",
+  "author": "Arjen Lammers",
+  "config": {
+    "widgetPath": "../..//widgets",
+    "projectPath": "../..//"
+  },
+  "packagePath": "mendix",
+  "scripts": {
+    "start": "npm run dev",
+    "build": "pluggable-widgets-tools build:js:native",
+    "dev": "pluggable-widgets-tools start:js:native",
+    "lint": "pluggable-widgets-tools lint",
+    "lint:fix": "pluggable-widgets-tools lint:fix",
+    "prerelease": "npm run lint",
+    "release": "pluggable-widgets-tools release:js:native"
+  },
+  "license": "None",
+  "bugs": {
+    "url": "https://github.com/Arjen Lammers/sentry/issues"
+  },
+  "devDependencies": {
+    "@mendix/pluggable-widgets-tools": "^8.9.2"
+  },
+  "dependencies": {
+    "@sentry/react-native": "^2.1.0"
+  }
+}
