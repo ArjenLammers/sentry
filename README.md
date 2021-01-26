@@ -2,13 +2,18 @@
 
 ## Implemented parts of the platform
 
- - Mendix Native client 
+ - Mendix Native client (using Sentry 3.2.1)
      - Redirection of client logs -as in the normal Log actions you can already use in nanoflows
      - Uncatched errors
      - Breadcrumbs (using Javascript action)
      - User correlation (Javascript action)
      - Tags (Javascript action) 
      - Not (yet) working impementation of performance (Javascript action)
+- Mendix Runtime (using Sentry 4.0.0-beta1)
+     - Redirection of Mendix logging to Sentry (including Mendix runtime version, model revision, hostname and lognode)
+     - Performance (single level)
+
+
 
 ## Mendix Native
 
@@ -48,7 +53,7 @@ Perform the following steps:
 ### Debugging
 
 If everything is configured correct, all will magically work and messages will arrive on your Sentry host. If this is not the case, take the following steps:
-- Set the *debug* attribute in the JSON object of the *SentryConfig* to true.
+- Set the `debug` attribute in the JSON object of the `NativeConfig` to true.
 - Attach your device to a development environment.
 - Inspect the log messages with e.g. Logcat of Android Studio.
 
@@ -58,12 +63,38 @@ If everything is configured correct, all will magically work and messages will a
 Seen all components (native template, widget and Javascript actions) need to be aware of the Sentry API, they require the Node modules in all parts. It is recommended to pin the version and upgrade all components at the same time. My preferred order is:
 - Upgrade the Native Template
 
-- Upgrade the widget (in widgets.src/js)
+- Upgrade the widget (in `widgets.src/js`)
 
-- Copy the overlapping modules of javascriptsource/reactnativebackgroundgeolocation/actions/node_modules and widgets.src/js/node_modules from the widgets.src to the javascriptactions
+- Copy the overlapping modules of `javascriptsource/reactnativebackgroundgeolocation/actions/node_modules` and `widgets.src/js/node_modules` from the `widgets.src` to the `javascriptactions`
 
 It's not pretty, but it works.
 
 
+
+## Mendix Runtime
+
+
+
+### Installation instructions
+
+There're various ways to specify the configuration parameters for Sentry. The recommended approach is by using **environment variables**.
+
+Within the Mendix Cloud they can be configured per environment as *unsupported variables*.
+
+- Model
+  - Attach the AfterStartup microflow to the after startup sequence.
+- Per environment
+  - Set the DSN as environment variable `SENTRY_DSN` (see https://docs.sentry.io/platforms/java/configuration/)
+  - (recommended) Set the stage as environment variable `SENTRY_ENVIRONMENT`
+
+
+
+# Upgrade instructions
+
+## From 0.1 to 0.2
+
+- The constant `Sentry.SentryConfig` has been renamed to `Sentry.NativeConfig`
+- The actions for Mendix Native have been prefixed with `Native_` e.g. from `AddTag` to `Native_AddTag`
+- 
 
 

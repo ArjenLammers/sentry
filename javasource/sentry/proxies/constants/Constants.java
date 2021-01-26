@@ -17,11 +17,13 @@ public class Constants
 	*  - "defaultIntegrations" required to be false.
 	*  - "environment" is recommended (dev/test/accp/whatever)
 	* 
+	* To discover what can be configured, look at https://docs.sentry.io/platforms/javascript/configuration/
+	* 
 	* E.g:
 	* { "dsn": "http://599381cc1ab84b1baca53776691330af@mx-sentryhost.westeurope.cloudapp.azure.com:9000/3", "environment": "dev", "debug": true, "defaultIntegrations": false }
 	*/
-	public static java.lang.String getSentryConfig()
+	public static java.lang.String getNativeConfig()
 	{
-		return (java.lang.String)Core.getConfiguration().getConstantValue("Sentry.SentryConfig");
+		return (java.lang.String)Core.getConfiguration().getConstantValue("Sentry.NativeConfig");
 	}
 }

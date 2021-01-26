@@ -5,7 +5,7 @@ console.info("Sentry init..");
 
 let sentryConfig = null;
 mx.session.getConstants().forEach(element => {
-    if (element.name == "Sentry.SentryConfig") {
+    if (element.name == "Sentry.NativeConfig") {
         sentryConfig = JSON.parse(element.value);
     }
 });
