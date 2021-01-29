@@ -10,6 +10,8 @@
 package sentry.actions;
 
 import com.mendix.systemwideinterfaces.core.IContext;
+import com.mendix.systemwideinterfaces.core.ISession;
+import com.mendix.systemwideinterfaces.core.IUser;
 import com.mendix.webui.CustomJavaAction;
 import io.sentry.ITransaction;
 import io.sentry.Sentry;
@@ -34,6 +36,15 @@ public class Runtime_StartTransaction extends CustomJavaAction<java.lang.Void>
 		ITransaction transaction = Sentry.startTransaction(name);
 		transaction.setOperation(op);
 		getContext().getData().put(SentryConstants.TRANSACTION_KEY, transaction);
+		
+		ISession session = getContext().getSession();
+		if (session != null) {
+			try {
+				transaction.setTag("username", session.getUserName());
+			} catch (Exception e) {}
+		}
+		
+		
 		return null;
 		// END USER CODE
 	}

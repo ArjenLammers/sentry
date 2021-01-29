@@ -13,13 +13,17 @@ import com.mendix.core.CoreException;
 import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.webui.CustomJavaAction;
 import io.sentry.ITransaction;
+import io.sentry.SpanStatus;
 import sentry.impl.SentryConstants;
 
 public class Runtime_FinishTransaction extends CustomJavaAction<java.lang.Void>
 {
-	public Runtime_FinishTransaction(IContext context)
+	private java.lang.Boolean didError;
+
+	public Runtime_FinishTransaction(IContext context, java.lang.Boolean didError)
 	{
 		super(context);
+		this.didError = didError;
 	}
 
 	@java.lang.Override
@@ -30,7 +34,7 @@ public class Runtime_FinishTransaction extends CustomJavaAction<java.lang.Void>
 		if (transactionObject == null || !(transactionObject instanceof ITransaction)) 
 			throw new CoreException("Start a Sentry transaction first.");
 		ITransaction transaction = (ITransaction) transactionObject;
-		transaction.finish();
+		transaction.finish(didError ? SpanStatus.INTERNAL_ERROR : SpanStatus.OK);
 		getContext().getData().remove(SentryConstants.TRANSACTION_KEY);
 		return null;
 		// END USER CODE

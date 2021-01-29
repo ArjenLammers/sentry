@@ -14,15 +14,18 @@ import com.mendix.core.CoreException;
 import com.mendix.logging.ILogNode;
 import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.webui.CustomJavaAction;
-
 import io.sentry.ISpan;
+import io.sentry.SpanStatus;
 import sentry.impl.SentryConstants;
 
 public class Runtime_FinishChild extends CustomJavaAction<java.lang.Void>
 {
-	public Runtime_FinishChild(IContext context)
+	private java.lang.Boolean didError;
+
+	public Runtime_FinishChild(IContext context, java.lang.Boolean didError)
 	{
 		super(context);
+		this.didError = didError;
 	}
 
 	@java.lang.Override
@@ -37,7 +40,7 @@ public class Runtime_FinishChild extends CustomJavaAction<java.lang.Void>
 		}
 		
 		ISpan child = (ISpan) childObject;
-		child.finish();
+		child.finish(didError ? SpanStatus.INTERNAL_ERROR : SpanStatus.OK);
 		getContext().getData().remove(SentryConstants.CHILD_KEY);
 		return null;
 		// END USER CODE

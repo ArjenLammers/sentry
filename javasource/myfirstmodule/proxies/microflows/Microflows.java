@@ -19,6 +19,11 @@ public class Microflows
 		Map<java.lang.String, Object> params = new HashMap<>();
 		Core.microflowCall("MyFirstModule.IVK_Me").withParams(params).execute(context);
 	}
+	public static void iVK_PerformanceError(IContext context)
+	{
+		Map<java.lang.String, Object> params = new HashMap<>();
+		Core.microflowCall("MyFirstModule.IVK_PerformanceError").withParams(params).execute(context);
+	}
 	public static void iVK_PerformanceTest(IContext context)
 	{
 		Map<java.lang.String, Object> params = new HashMap<>();

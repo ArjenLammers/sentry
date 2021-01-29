@@ -11,40 +11,70 @@ package sentry.actions;
 
 import java.net.URL;
 import com.mendix.core.Core;
+import com.mendix.core.conf.Configuration;
 import com.mendix.logging.LogLevel;
 import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.webui.CustomJavaAction;
 import io.sentry.Sentry;
+import io.sentry.SentryLevel;
 import sentry.impl.SentryLogSubscriber;
 import sentry.impl.SentryLogger;
+import com.mendix.systemwideinterfaces.core.IMendixObject;
 
 public class InitializeSentry extends CustomJavaAction<java.lang.Void>
 {
-	public InitializeSentry(IContext context)
+	private IMendixObject __config;
+	private sentry.proxies.RuntimeConfiguration config;
+
+	public InitializeSentry(IContext context, IMendixObject config)
 	{
 		super(context);
+		this.__config = config;
 	}
 
 	@java.lang.Override
 	public java.lang.Void executeAction() throws Exception
 	{
+		this.config = __config == null ? null : sentry.proxies.RuntimeConfiguration.initialize(getContext(), __config);
+
 		// BEGIN USER CODE
 		URL url = new URL(Core.getConfiguration().getApplicationRootUrl());
 		
+		if (!config.getEnabled()) {
+			return null;
+		}
+		
 		Sentry.init(options -> {
-			options.setEnableExternalConfiguration(true);
+			options.setEnableExternalConfiguration(false);
+			options.setDsn(config.getDSN());
+			options.setDebug(config.getDebug());
 			options.setServerName(url.getHost());
 			options.setRelease(Core.getModelVersion());
 			options.setLogger(new SentryLogger());
- 			options.setTracesSampleRate(1d); // FIX THIS!!
+			options.setEnvironment(config.getEnvironment());
+			options.setAttachStacktrace(config.getAttachStacktrace());
+			options.setDiagnosticLevel(SentryLevel.valueOf(
+					config.getDiagnosticLevel().toString()));
+			
+			if (config.getSampleRate() != null) {
+				options.setSampleRate(config.getSampleRate().doubleValue());
+			}
+			if (config.getTracesSampleRate() != null) {
+				options.setTracesSampleRate(config.getTracesSampleRate().doubleValue());
+			}
+			
 		});
 		
 		if (System.getenv("CF_INSTANCE_INDEX") != null) {
 			Sentry.setTag("instance", System.getenv("CF_INSTANCE_INDEX"));
 		}
 		
-		Sentry.setTag("runtime.version", Core.getConfiguration().RUNTIME_VERSION.toString());
-		Core.registerLogSubscriber(new SentryLogSubscriber(LogLevel.INFO));
+		Core.getConfiguration();
+		Sentry.setTag("runtime.version", Configuration.RUNTIME_VERSION.toString());
+		
+		if (config.getRedirectMendixLog()) {
+			Core.registerLogSubscriber(new SentryLogSubscriber(LogLevel.INFO));			
+		}
 		
 		return null;
 		// END USER CODE

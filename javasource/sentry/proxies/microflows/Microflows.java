@@ -10,6 +10,7 @@ import com.mendix.core.Core;
 import com.mendix.core.CoreException;
 import com.mendix.systemwideinterfaces.MendixRuntimeException;
 import com.mendix.systemwideinterfaces.core.IContext;
+import com.mendix.systemwideinterfaces.core.IMendixObject;
 
 public class Microflows
 {
@@ -18,5 +19,17 @@ public class Microflows
 	{
 		Map<java.lang.String, Object> params = new HashMap<>();
 		return (java.lang.Boolean) Core.microflowCall("Sentry.AfterStartup").withParams(params).execute(context);
+	}
+	public static sentry.proxies.RuntimeConfiguration dS_GetRuntimeConfiguration(IContext context)
+	{
+		Map<java.lang.String, Object> params = new HashMap<>();
+		IMendixObject result = (IMendixObject)Core.microflowCall("Sentry.DS_GetRuntimeConfiguration").withParams(params).execute(context);
+		return result == null ? null : sentry.proxies.RuntimeConfiguration.initialize(context, result);
+	}
+	public static void iVK_SaveRuntimeConfiguration(IContext context, sentry.proxies.RuntimeConfiguration _runtimeConfiguration)
+	{
+		Map<java.lang.String, Object> params = new HashMap<>();
+		params.put("RuntimeConfiguration", _runtimeConfiguration == null ? null : _runtimeConfiguration.getMendixObject());
+		Core.microflowCall("Sentry.IVK_SaveRuntimeConfiguration").withParams(params).execute(context);
 	}
 }

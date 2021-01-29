@@ -1,4 +1,4 @@
-# Mendix implementation of [Sentry](https://sentry.io)
+# Mendix implementation of [Sentry](https://sentry.io) (version 0.3)
 
 ## Implemented parts of the platform
 
@@ -77,24 +77,26 @@ It's not pretty, but it works.
 
 ### Installation instructions
 
-There're various ways to specify the configuration parameters for Sentry. The recommended approach is by using **environment variables**.
-
-Within the Mendix Cloud they can be configured per environment as *unsupported variables*.
-
 - Model
   - Attach the AfterStartup microflow to the after startup sequence.
-- Per environment
-  - Set the DSN as environment variable `SENTRY_DSN` (see https://docs.sentry.io/platforms/java/configuration/)
-  - (recommended) Set the stage as environment variable `SENTRY_ENVIRONMENT`
+  - Make the snippet `Sentry.Web_Configuration` available in the application for configuration.
+  - Connect the `Administrator` module role to a project role.
+- Configure the environments through the added snippet.
+- Restart the application if configuration is completed.
 
 
 
 # Upgrade instructions
 
+## From 0.2 to 0.3
+
+- Re-read the installation instructions. The majority of instructions are new.
+
 ## From 0.1 to 0.2
 
 - The constant `Sentry.SentryConfig` has been renamed to `Sentry.NativeConfig`
-- The actions for Mendix Native have been prefixed with `Native_` e.g. from `AddTag` to `Native_AddTag`
-- 
+- The actions for Mendix Native have been prefixed with `Native_` (e.g. from `AddTag` to `Native_AddTag`)
+
+
 
 
