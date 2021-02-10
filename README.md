@@ -1,4 +1,4 @@
-# Mendix implementation of [Sentry](https://sentry.io) (version 0.3)
+# Mendix implementation of [Sentry](https://sentry.io) (version 0.4)
 
 ## Implemented parts of the platform
 
@@ -11,7 +11,7 @@
      - Not (yet) working impementation of performance (Javascript action)
 - Mendix Runtime (using Sentry 4.0.0-beta1)
      - Redirection of Mendix logging to Sentry (including Mendix runtime version, model revision, hostname and lognode)
-     - Performance (single level)
+     - Performance (including nested transactions)
 
 
 
@@ -87,6 +87,10 @@ It's not pretty, but it works.
 
 
 # Upgrade instructions
+
+## From 0.3 to 0.4
+
+None.
 
 ## From 0.2 to 0.3
 

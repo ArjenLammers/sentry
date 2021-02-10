@@ -9,6 +9,7 @@
 
 package sentry.actions;
 
+import java.util.Stack;
 import com.mendix.core.Core;
 import com.mendix.core.CoreException;
 import com.mendix.logging.ILogNode;
@@ -35,19 +36,24 @@ public class Runtime_StartChild extends CustomJavaAction<java.lang.Void>
 	{
 		// BEGIN USER CODE
 		ILogNode logger = Core.getLogger(SentryConstants.LOGNODE);
-		Object transactionObject = getContext().getData().get(SentryConstants.TRANSACTION_KEY); 
-		if (transactionObject == null || !(transactionObject instanceof ITransaction)) {
+		Object transactionStackObject = getContext().getData().get(SentryConstants.TRANSACTION_KEY); 
+		if (transactionStackObject == null || !(transactionStackObject instanceof Stack)) {
 			logger.warn("Start a Sentry transaction first.");
 			return null;
 		}
-		if (getContext().getData().containsKey(SentryConstants.CHILD_KEY)) {
-			logger.warn("Already in a Sentry child.");
-			return null;
+		Stack<ITransaction> transactionStack = (Stack<ITransaction>) transactionStackObject;
+		Stack<ISpan> childStack; 
+		
+		if (!getContext().getData().containsKey(SentryConstants.CHILD_KEY)) {
+			childStack = new Stack<ISpan>();
+			getContext().getData().put(SentryConstants.CHILD_KEY, childStack);
+		} else {
+			childStack = (Stack<ISpan>) getContext().getData().get(SentryConstants.CHILD_KEY);
 		}
 		
-		ITransaction transaction = (ITransaction) transactionObject;
+		ITransaction transaction = (ITransaction) transactionStack.peek();
 		ISpan span = transaction.startChild(op, description);
-		getContext().getData().put(SentryConstants.CHILD_KEY, span);
+		childStack.push(span);
 		return null;
 		// END USER CODE
 	}

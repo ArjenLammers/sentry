@@ -9,6 +9,7 @@
 
 package sentry.actions;
 
+import java.util.Stack;
 import com.mendix.core.CoreException;
 import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.webui.CustomJavaAction;
@@ -30,12 +31,14 @@ public class Runtime_FinishTransaction extends CustomJavaAction<java.lang.Void>
 	public java.lang.Void executeAction() throws Exception
 	{
 		// BEGIN USER CODE
-		Object transactionObject = getContext().getData().get(SentryConstants.TRANSACTION_KEY); 
-		if (transactionObject == null || !(transactionObject instanceof ITransaction)) 
+		Object transactionStackObj = getContext().getData().get(SentryConstants.TRANSACTION_KEY); 
+		if (transactionStackObj == null || !(transactionStackObj instanceof Stack)) 
 			throw new CoreException("Start a Sentry transaction first.");
-		ITransaction transaction = (ITransaction) transactionObject;
+		Stack<ITransaction> transactionStack = (Stack<ITransaction>) transactionStackObj;
+		
+		ITransaction transaction = (ITransaction) transactionStack.pop();
+		
 		transaction.finish(didError ? SpanStatus.INTERNAL_ERROR : SpanStatus.OK);
-		getContext().getData().remove(SentryConstants.TRANSACTION_KEY);
 		return null;
 		// END USER CODE
 	}

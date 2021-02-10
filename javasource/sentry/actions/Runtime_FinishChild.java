@@ -9,6 +9,7 @@
 
 package sentry.actions;
 
+import java.util.Stack;
 import com.mendix.core.Core;
 import com.mendix.core.CoreException;
 import com.mendix.logging.ILogNode;
@@ -33,15 +34,15 @@ public class Runtime_FinishChild extends CustomJavaAction<java.lang.Void>
 	{
 		// BEGIN USER CODE
 		ILogNode logger = Core.getLogger(SentryConstants.LOGNODE);
-		Object childObject = getContext().getData().get(SentryConstants.CHILD_KEY);
-		if (childObject == null || !(childObject instanceof ISpan)) {
+		Object childStackObject = getContext().getData().get(SentryConstants.CHILD_KEY);
+		if (childStackObject == null || !(childStackObject instanceof Stack)) {
 			logger.warn("Start a Sentry child first.");
 			return null;
 		}
+		Stack<ISpan> childStack = (Stack<ISpan>) childStackObject;
 		
-		ISpan child = (ISpan) childObject;
+		ISpan child = (ISpan) childStack.pop();
 		child.finish(didError ? SpanStatus.INTERNAL_ERROR : SpanStatus.OK);
-		getContext().getData().remove(SentryConstants.CHILD_KEY);
 		return null;
 		// END USER CODE
 	}

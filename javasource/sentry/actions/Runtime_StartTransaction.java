@@ -9,6 +9,7 @@
 
 package sentry.actions;
 
+import java.util.Stack;
 import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.systemwideinterfaces.core.ISession;
 import com.mendix.systemwideinterfaces.core.IUser;
@@ -33,9 +34,16 @@ public class Runtime_StartTransaction extends CustomJavaAction<java.lang.Void>
 	public java.lang.Void executeAction() throws Exception
 	{
 		// BEGIN USER CODE
+		Stack<ITransaction> transactionStack;
+		if (getContext().getData().containsKey(SentryConstants.TRANSACTION_KEY)) {
+			transactionStack = (Stack<ITransaction>) getContext().getData().get(SentryConstants.TRANSACTION_KEY);
+		} else {
+			transactionStack = new Stack<>();
+			getContext().getData().put(SentryConstants.TRANSACTION_KEY, transactionStack);
+		}
+		
 		ITransaction transaction = Sentry.startTransaction(name);
 		transaction.setOperation(op);
-		getContext().getData().put(SentryConstants.TRANSACTION_KEY, transaction);
 		
 		ISession session = getContext().getSession();
 		if (session != null) {
@@ -44,7 +52,7 @@ public class Runtime_StartTransaction extends CustomJavaAction<java.lang.Void>
 			} catch (Exception e) {}
 		}
 		
-		
+		transactionStack.push(transaction);
 		return null;
 		// END USER CODE
 	}
