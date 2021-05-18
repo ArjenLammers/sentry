@@ -27,6 +27,6 @@
     "@mendix/pluggable-widgets-tools": "^8.9.2"
   },
   "dependencies": {
-    "@sentry/react-native": "^2.1.0"
+    "@sentry/react-native": "^2.4.3"
   }
 }

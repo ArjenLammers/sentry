@@ -42,8 +42,7 @@ public class Runtime_StartTransaction extends CustomJavaAction<java.lang.Void>
 			getContext().getData().put(SentryConstants.TRANSACTION_KEY, transactionStack);
 		}
 		
-		ITransaction transaction = Sentry.startTransaction(name);
-		transaction.setOperation(op);
+		ITransaction transaction = Sentry.startTransaction(name, op);
 		
 		ISession session = getContext().getSession();
 		if (session != null) {
