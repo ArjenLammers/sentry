@@ -46,7 +46,8 @@ mx.logger.addHandler((level, message) => {
 
 mx._onError = mx.onError;
 mx.onError = function(e) {
-    SentryAPI.captureException(e);
+	debugger;
+    SentryAPI.captureException(e, true);
     console.info("Exception catched!");
     mx._onError(e);
 }

@@ -1,19 +1,17 @@
-# Mendix implementation of [Sentry](https://sentry.io) (version 0.4)
+# Mendix implementation of [Sentry](https://sentry.io) (version 0.5)
 
 ## Implemented parts of the platform
 
- - Mendix Native client (using Sentry 3.2.1)
+ - Mendix Native client (using Sentry 2.4.3)
      - Redirection of client logs -as in the normal Log actions you can already use in nanoflows
      - Uncatched errors
      - Breadcrumbs (using Javascript action)
      - User correlation (Javascript action)
      - Tags (Javascript action) 
-     - Not (yet) working impementation of performance (Javascript action)
-- Mendix Runtime (using Sentry 4.0.0-beta1)
+	 - Performance
+	- Mendix Runtime (using Sentry 4.3.0)
      - Redirection of Mendix logging to Sentry (including Mendix runtime version, model revision, hostname and lognode)
      - Performance (including nested transactions)
-
-
 
 ## Mendix Native
 
@@ -37,7 +35,7 @@ Collect the following values from the Sentry UI:
 Assuming you already have your Mendix Native project locally, execute the following commands with the command line in the project's directory.
 
 ```
-npm install --save @sentry/react-native@2.1.0
+npm install --save @sentry/react-native@2.4.3
 npx sentry-wizard -i reactNative -p ios android --skip-connect
 ```
 
@@ -87,6 +85,10 @@ It's not pretty, but it works.
 
 
 # Upgrade instructions
+
+## From 0.4 to 0.5
+
+Make sure that sentry-4.3.0.jar is the only sentry-X.jar in the userlib folder of your Mendix project.
 
 ## From 0.3 to 0.4
 
