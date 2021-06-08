@@ -1,4 +1,4 @@
-# Mendix implementation of [Sentry](https://sentry.io) (version 0.5)
+# Mendix implementation of [Sentry](https://sentry.io) (version 0.6)
 
 ## Implemented parts of the platform
 
@@ -9,7 +9,8 @@
      - User correlation (Javascript action)
      - Tags (Javascript action) 
 	 - Performance
-	- Mendix Runtime (using Sentry 4.3.0)
+	 - User specific configuration
+- Mendix Runtime (using Sentry 4.3.0)
      - Redirection of Mendix logging to Sentry (including Mendix runtime version, model revision, hostname and lognode)
      - Performance (including nested transactions)
 
@@ -44,14 +45,17 @@ npx sentry-wizard -i reactNative -p ios android --skip-connect
 #### Mendix Model
 Perform the following steps:
 - Import the module into the project (e.g. from the App Store)
-- Alter the *SentryConfig* constant (read the *Documentation* field!) and apply the data which was collected at the preparations
+- Implement the `Sentry.Administration` snippet into your project.
+- Attach `Sentry.AfterStartup` to your after startup flow.
 - Include the Sentry widget on your homepages (e.g. for both the Anonymous and User homepage)
 - Apply the Sentry actions within your model where they suit the best.
+- Apply the Sentry configuration at the Native and Runtime Configuration in the `Administration`
+- Add the `Sentry.NativeConfiguration` to your Offline Synchronization profile.
 
 ### Debugging
 
 If everything is configured correct, all will magically work and messages will arrive on your Sentry host. If this is not the case, take the following steps:
-- Set the `debug` attribute in the JSON object of the `NativeConfig` to true.
+- Set the `debug` attribute in the JSON object of the `NativeDefaultConfig` and the `Configuration` in  *Native Configuration* to true.
 - Attach your device to a development environment.
 - Inspect the log messages with e.g. Logcat of Android Studio.
 
@@ -71,8 +75,6 @@ It's not pretty, but it works.
 
 ## Mendix Runtime
 
-
-
 ### Installation instructions
 
 - Model
@@ -85,6 +87,10 @@ It's not pretty, but it works.
 
 
 # Upgrade instructions
+
+## From 0.5 to 0.6
+
+The constant `Sentry.NativeConfig` has been renamed to `Sentry.NativeDefaultConfig`. This configuration will only be used if no `Sentry.NativeConfigruation` has been configured.
 
 ## From 0.4 to 0.5
 
@@ -102,7 +108,6 @@ None.
 
 - The constant `Sentry.SentryConfig` has been renamed to `Sentry.NativeConfig`
 - The actions for Mendix Native have been prefixed with `Native_` (e.g. from `AddTag` to `Native_AddTag`)
-
 
 
 

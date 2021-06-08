@@ -20,11 +20,28 @@ public class Microflows
 		Map<java.lang.String, Object> params = new HashMap<>();
 		return (java.lang.Boolean) Core.microflowCall("Sentry.AfterStartup").withParams(params).execute(context);
 	}
+	public static sentry.proxies.NativeConfiguration dS_GetGenericNativeConfiguration(IContext context)
+	{
+		Map<java.lang.String, Object> params = new HashMap<>();
+		IMendixObject result = (IMendixObject)Core.microflowCall("Sentry.DS_GetGenericNativeConfiguration").withParams(params).execute(context);
+		return result == null ? null : sentry.proxies.NativeConfiguration.initialize(context, result);
+	}
 	public static sentry.proxies.RuntimeConfiguration dS_GetRuntimeConfiguration(IContext context)
 	{
 		Map<java.lang.String, Object> params = new HashMap<>();
 		IMendixObject result = (IMendixObject)Core.microflowCall("Sentry.DS_GetRuntimeConfiguration").withParams(params).execute(context);
 		return result == null ? null : sentry.proxies.RuntimeConfiguration.initialize(context, result);
+	}
+	public static void iVK_NewUserNativeConfiguration(IContext context)
+	{
+		Map<java.lang.String, Object> params = new HashMap<>();
+		Core.microflowCall("Sentry.IVK_NewUserNativeConfiguration").withParams(params).execute(context);
+	}
+	public static void iVK_SaveNativeConfiguration(IContext context, sentry.proxies.NativeConfiguration _nativeConfiguration)
+	{
+		Map<java.lang.String, Object> params = new HashMap<>();
+		params.put("NativeConfiguration", _nativeConfiguration == null ? null : _nativeConfiguration.getMendixObject());
+		Core.microflowCall("Sentry.IVK_SaveNativeConfiguration").withParams(params).execute(context);
 	}
 	public static void iVK_SaveRuntimeConfiguration(IContext context, sentry.proxies.RuntimeConfiguration _runtimeConfiguration)
 	{

@@ -19,7 +19,6 @@ export async function Native_FinishTransaction(transactionId) {
 	// BEGIN USER CODE
 	let transaction = GLOBAL.sentryTransactions["" + transactionId];
 	transaction.finish();
-	debugger;
 	delete GLOBAL.sentryTransactions["" + transactionId];
 	// END USER CODE
 }
