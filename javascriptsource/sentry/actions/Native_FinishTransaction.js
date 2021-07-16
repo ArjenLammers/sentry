@@ -18,6 +18,10 @@ import * as SentryAPI from "@sentry/react-native";
 export async function Native_FinishTransaction(transactionId) {
 	// BEGIN USER CODE
 	let transaction = GLOBAL.sentryTransactions["" + transactionId];
+	if (!transaction) {
+		console.warn("Expected to finish transaction " + transactionId + " but it wasn't found.")
+		return;
+	}
 	transaction.finish();
 	delete GLOBAL.sentryTransactions["" + transactionId];
 	// END USER CODE

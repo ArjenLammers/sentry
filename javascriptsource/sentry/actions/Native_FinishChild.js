@@ -17,6 +17,10 @@ import { Big } from "big.js";
 export async function Native_FinishChild(childId) {
 	// BEGIN USER CODE
 	let child = GLOBAL.sentryTransactionChildren["" + childId];
+	if (!child) {
+		console.warn("Expected to finish child " + childId + " but it wasn't found.");
+		return;
+	}
 	child.finish();
 	delete GLOBAL.sentryTransactionChildren["" + childId];
 	// END USER CODE

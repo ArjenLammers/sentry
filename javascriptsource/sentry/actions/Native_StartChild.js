@@ -20,6 +20,11 @@ GLOBAL.sentryTransactionChildren = {};
 export async function Native_StartChild(transactionId, op, description) {
 	// BEGIN USER CODE
 	let transaction = GLOBAL.sentryTransactions["" + transactionId];
+	if (!transaction) {
+		console.warn("Unable to start child of " + transactionId + " because the transaction was not found.");
+		return;
+	}
+
 	let newId = Object.keys(GLOBAL.sentryTransactionChildren).length;
 	GLOBAL.sentryTransactionChildren["" + newId] = transaction.startChild({
 		op: op,
