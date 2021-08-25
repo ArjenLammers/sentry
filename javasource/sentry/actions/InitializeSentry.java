@@ -69,7 +69,6 @@ public class InitializeSentry extends CustomJavaAction<java.lang.Void>
 			Sentry.setTag("instance", System.getenv("CF_INSTANCE_INDEX"));
 		}
 		
-		Core.getConfiguration();
 		Sentry.setTag("runtime.version", Configuration.RUNTIME_VERSION.toString());
 		
 		if (config.getRedirectMendixLog()) {
