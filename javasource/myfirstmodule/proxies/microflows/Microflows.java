@@ -14,10 +14,10 @@ import com.mendix.systemwideinterfaces.core.IContext;
 public class Microflows
 {
 	// These are the microflows for the MyFirstModule module
-	public static void iVK_Me(IContext context)
+	public static void iVK_LogMessages(IContext context)
 	{
 		Map<java.lang.String, Object> params = new HashMap<>();
-		Core.microflowCall("MyFirstModule.IVK_Me").withParams(params).execute(context);
+		Core.microflowCall("MyFirstModule.IVK_LogMessages").withParams(params).execute(context);
 	}
 	public static void iVK_PerformanceError(IContext context)
 	{

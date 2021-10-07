@@ -231,7 +231,7 @@ public class NativeConfiguration
 	 * Set value of Scope
 	 * @param scope
 	 */
-	public final sentry.proxies.NativeConfigurationScope getScope()
+	public final sentry.proxies.ConfigurationScope getScope()
 	{
 		return getScope(getContext());
 	}
@@ -240,20 +240,20 @@ public class NativeConfiguration
 	 * @param context
 	 * @return value of Scope
 	 */
-	public final sentry.proxies.NativeConfigurationScope getScope(com.mendix.systemwideinterfaces.core.IContext context)
+	public final sentry.proxies.ConfigurationScope getScope(com.mendix.systemwideinterfaces.core.IContext context)
 	{
 		Object obj = getMendixObject().getValue(context, MemberNames.Scope.toString());
 		if (obj == null)
 			return null;
 
-		return sentry.proxies.NativeConfigurationScope.valueOf((java.lang.String) obj);
+		return sentry.proxies.ConfigurationScope.valueOf((java.lang.String) obj);
 	}
 
 	/**
 	 * Set value of Scope
 	 * @param scope
 	 */
-	public final void setScope(sentry.proxies.NativeConfigurationScope scope)
+	public final void setScope(sentry.proxies.ConfigurationScope scope)
 	{
 		setScope(getContext(), scope);
 	}
@@ -263,7 +263,7 @@ public class NativeConfiguration
 	 * @param context
 	 * @param scope
 	 */
-	public final void setScope(com.mendix.systemwideinterfaces.core.IContext context, sentry.proxies.NativeConfigurationScope scope)
+	public final void setScope(com.mendix.systemwideinterfaces.core.IContext context, sentry.proxies.ConfigurationScope scope)
 	{
 		if (scope != null)
 			getMendixObject().setValue(context, MemberNames.Scope.toString(), scope.toString());

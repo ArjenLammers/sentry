@@ -1,8 +1,7 @@
-# Mendix implementation of [Sentry](https://sentry.io) (version 0.6)
+# Mendix implementation of [Sentry](https://sentry.io) (version 1.1)
 
 ## Implemented parts of the platform
-
- - Mendix Native client (using Sentry 2.4.3)
+ - Mendix Native client and Web/Desktop (using Sentry 2.4.3)
      - Redirection of client logs -as in the normal Log actions you can already use in nanoflows
      - Uncatched errors
      - Breadcrumbs (using Javascript action)
@@ -47,10 +46,16 @@ Perform the following steps:
 - Import the module into the project (e.g. from the App Store)
 - Implement the `Sentry.Administration` snippet into your project.
 - Attach `Sentry.AfterStartup` to your after startup flow.
-- Include the Sentry widget on your homepages (e.g. for both the Anonymous and User homepage)
+- Mendix Native
+	- Include the Sentry widget on your homepages (e.g. for both the Anonymous and User homepage)
+	- Configure the Native Sentry settings.
+	- Add the `Sentry.NativeConfiguration` to your Offline Synchronization profile.
+- Desktop/Web
+	- Connect the InitWebSentry nanoflow to a nanoflow which starts early in your app.
+	- Configure the Native Sentry settings.
 - Apply the Sentry actions within your model where they suit the best.
 - Apply the Sentry configuration at the Native and Runtime Configuration in the `Administration`
-- Add the `Sentry.NativeConfiguration` to your Offline Synchronization profile.
+
 
 ### Debugging
 
@@ -87,6 +92,10 @@ It's not pretty, but it works.
 
 
 # Upgrade instructions
+
+## From any to 1.1.0
+The Native_X Javascript actions are now suitable for Web/Desktop and have been renamed to generic names, e.g. from Native_StartTransaction to StartTransaction.
+You might have to reselect the actions in your model.
 
 ## From 0.5 to 0.6
 

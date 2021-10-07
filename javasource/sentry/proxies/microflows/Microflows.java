@@ -32,6 +32,12 @@ public class Microflows
 		IMendixObject result = (IMendixObject)Core.microflowCall("Sentry.DS_GetRuntimeConfiguration").withParams(params).execute(context);
 		return result == null ? null : sentry.proxies.RuntimeConfiguration.initialize(context, result);
 	}
+	public static sentry.proxies.WebConfiguration dS_GetWebConfiguration(IContext context)
+	{
+		Map<java.lang.String, Object> params = new HashMap<>();
+		IMendixObject result = (IMendixObject)Core.microflowCall("Sentry.DS_GetWebConfiguration").withParams(params).execute(context);
+		return result == null ? null : sentry.proxies.WebConfiguration.initialize(context, result);
+	}
 	public static void iVK_NewUserNativeConfiguration(IContext context)
 	{
 		Map<java.lang.String, Object> params = new HashMap<>();
@@ -48,5 +54,11 @@ public class Microflows
 		Map<java.lang.String, Object> params = new HashMap<>();
 		params.put("RuntimeConfiguration", _runtimeConfiguration == null ? null : _runtimeConfiguration.getMendixObject());
 		Core.microflowCall("Sentry.IVK_SaveRuntimeConfiguration").withParams(params).execute(context);
+	}
+	public static void iVK_SaveWebConfiguration(IContext context, sentry.proxies.WebConfiguration _webConfiguration)
+	{
+		Map<java.lang.String, Object> params = new HashMap<>();
+		params.put("WebConfiguration", _webConfiguration == null ? null : _webConfiguration.getMendixObject());
+		Core.microflowCall("Sentry.IVK_SaveWebConfiguration").withParams(params).execute(context);
 	}
 }
