@@ -40,6 +40,11 @@ function initializeSentry(nativeConfiguration) {
         dsn: nativeConfiguration.get("DSN"),
         defaultIntegrations: false
     };
+
+    GLOBAL.MENDIXLOGLEVEL = nativeConfiguration.get("LogLevel");
+	if (!GLOBAL.MENDIXLOGLEVEL) {
+        GLOBAL.MENDIXLOGLEVEL = "WARNING";
+    }
     
     let additionalConfig = nativeConfiguration.get("Configuration");
     if (additionalConfig && additionalConfig.startsWith('{')) {
@@ -60,18 +65,44 @@ function initializeSentry(nativeConfiguration) {
                 severity = SentryAPI.Severity.Critical;
                 break;
             case "error":
+                switch (String(GLOBAL.MENDIXLOGLEVEL)) {
+                    case "CRITICAL": return;
+                }
                 severity = SentryAPI.Severity.Error;
                 break;
             case "warning":
+                switch (String(GLOBAL.MENDIXLOGLEVEL)) {
+                    case "CRITICAL": return;
+                    case "ERROR": return;
+                }
                 severity = SentryAPI.Severity.Warning;
                 break;
             case "info":
+                switch (String(GLOBAL.MENDIXLOGLEVEL)) {
+                    case "CRITICAL": return;
+                    case "ERROR": return;
+                    case "WARNING": return;
+                }
                 severity = SentryAPI.Severity.Info;
                 break;
             case "debug":
+                switch (String(GLOBAL.MENDIXLOGLEVEL)) {
+                    case "CRITICAL": return;
+                    case "ERROR": return;
+                    case "WARNING": return;
+                    case "INFO": return;
+                }
+
                 severity = SentryAPI.Severity.Debug;
                 break;
             case "trace":
+                switch (String(GLOBAL.MENDIXLOGLEVEL)) {
+                    case "CRITICAL": return;
+                    case "ERROR": return;
+                    case "WARNING": return;
+                    case "INFO": return;
+                    case "DEBUG": return;
+                }
                 severity = SentryAPI.Severity.Trace;
                 break;
             default:

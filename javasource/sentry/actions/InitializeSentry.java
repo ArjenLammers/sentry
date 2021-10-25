@@ -19,6 +19,7 @@ import io.sentry.Sentry;
 import io.sentry.SentryLevel;
 import sentry.impl.SentryLogSubscriber;
 import sentry.impl.SentryLogger;
+import sentry.proxies.MendixLogLevel;
 import com.mendix.systemwideinterfaces.core.IMendixObject;
 
 public class InitializeSentry extends CustomJavaAction<java.lang.Void>
@@ -72,7 +73,12 @@ public class InitializeSentry extends CustomJavaAction<java.lang.Void>
 		Sentry.setTag("runtime.version", Configuration.RUNTIME_VERSION.toString());
 		
 		if (config.getRedirectMendixLog()) {
-			Core.registerLogSubscriber(new SentryLogSubscriber(LogLevel.INFO));			
+			MendixLogLevel logLevel = config.getLogLevel();
+			if (logLevel == null) {
+				logLevel = MendixLogLevel.WARNING;
+			}
+
+			Core.registerLogSubscriber(new SentryLogSubscriber(LogLevel.valueOf(logLevel.name())));			
 		}
 		
 		return null;

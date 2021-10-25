@@ -24,6 +24,7 @@ public class NativeConfiguration
 		DSN("DSN"),
 		Configuration("Configuration"),
 		Scope("Scope"),
+		LogLevel("LogLevel"),
 		NativeConfiguration_User("Sentry.NativeConfiguration_User");
 
 		private java.lang.String metaName;
@@ -269,6 +270,50 @@ public class NativeConfiguration
 			getMendixObject().setValue(context, MemberNames.Scope.toString(), scope.toString());
 		else
 			getMendixObject().setValue(context, MemberNames.Scope.toString(), null);
+	}
+
+	/**
+	 * Set value of LogLevel
+	 * @param loglevel
+	 */
+	public final sentry.proxies.MendixLogLevel getLogLevel()
+	{
+		return getLogLevel(getContext());
+	}
+
+	/**
+	 * @param context
+	 * @return value of LogLevel
+	 */
+	public final sentry.proxies.MendixLogLevel getLogLevel(com.mendix.systemwideinterfaces.core.IContext context)
+	{
+		Object obj = getMendixObject().getValue(context, MemberNames.LogLevel.toString());
+		if (obj == null)
+			return null;
+
+		return sentry.proxies.MendixLogLevel.valueOf((java.lang.String) obj);
+	}
+
+	/**
+	 * Set value of LogLevel
+	 * @param loglevel
+	 */
+	public final void setLogLevel(sentry.proxies.MendixLogLevel loglevel)
+	{
+		setLogLevel(getContext(), loglevel);
+	}
+
+	/**
+	 * Set value of LogLevel
+	 * @param context
+	 * @param loglevel
+	 */
+	public final void setLogLevel(com.mendix.systemwideinterfaces.core.IContext context, sentry.proxies.MendixLogLevel loglevel)
+	{
+		if (loglevel != null)
+			getMendixObject().setValue(context, MemberNames.LogLevel.toString(), loglevel.toString());
+		else
+			getMendixObject().setValue(context, MemberNames.LogLevel.toString(), null);
 	}
 
 	/**
