@@ -22,7 +22,6 @@ export async function StartTransaction(name, op) {
 	// BEGIN USER CODE
 	var SentryAPI = null;
 	var SCOPE = null;
-	var bla = SentryTracing;
 
 	if (navigator && navigator.product === "ReactNative") {
 				SCOPE = GLOBAL;
@@ -32,13 +31,18 @@ export async function StartTransaction(name, op) {
 				SCOPE = window;
 	}
 
-	if (!SCOPE.hasOwnProperty("sentryTransactionChildren"))
+	if (!SCOPE.hasOwnProperty("sentryTransactionChildren")) {
 		SCOPE.sentryTransactionChildren = {};
-	if (!SCOPE.hasOwnProperty("sentryTransactions"))
+		SCOPE.sentryTransactionChildId = 0;
+	} 
+
+	if (!SCOPE.hasOwnProperty("sentryTransactions")) {
 		SCOPE.sentryTransactions = {};
+		SCOPE.sentryTransactionId = 0;
+	}
 
+	let newId = SCOPE.sentryTransactionId++;
 
-	let newId = Object.keys(SCOPE.sentryTransactions).length;
 	SCOPE.sentryTransactions["" + newId] = SentryAPI.startTransaction({ 
 		name: name,
 		op: op

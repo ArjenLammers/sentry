@@ -33,10 +33,15 @@ export async function StartChild(transactionId, op, description) {
 				SCOPE = window;
 	}
 
-	if (!SCOPE.hasOwnProperty("sentryTransactionChildren"))
+	if (!SCOPE.hasOwnProperty("sentryTransactionChildren")) {
 		SCOPE.sentryTransactionChildren = {};
-	if (!SCOPE.hasOwnProperty("sentryTransactions"))
+		SCOPE.sentryTransactionChildId = 0;
+	} 
+
+	if (!SCOPE.hasOwnProperty("sentryTransactions")) {
 		SCOPE.sentryTransactions = {};
+		SCOPE.sentryTransactionId = 0;
+	}
 
 	let transaction = SCOPE.sentryTransactions["" + transactionId];
 	if (!transaction) {
@@ -44,7 +49,7 @@ export async function StartChild(transactionId, op, description) {
 		return;
 	}
 
-	let newId = Object.keys(SCOPE.sentryTransactionChildren).length;
+	let newId = SCOPE.sentryTransactionChildId++;
 	SCOPE.sentryTransactionChildren["" + newId] = transaction.startChild({
 		op: op,
 		description: description
