@@ -28,7 +28,61 @@ if (mx.data) {
     });
 }
 
+function logListener(level, message) {
+    let severity = null;
+    switch(level) {
+        case "critical":
+            severity = SentryAPI.Severity.Critical;
+            break;
+        case "error":
+            switch (String(GLOBAL.MENDIXLOGLEVEL)) {
+                case "CRITICAL": return;
+            }
+            severity = SentryAPI.Severity.Error;
+            break;
+        case "warning":
+            switch (String(GLOBAL.MENDIXLOGLEVEL)) {
+                case "CRITICAL": return;
+                case "ERROR": return;
+            }
+            severity = SentryAPI.Severity.Warning;
+            break;
+        case "info":
+            switch (String(GLOBAL.MENDIXLOGLEVEL)) {
+                case "CRITICAL": return;
+                case "ERROR": return;
+                case "WARNING": {
+                    alert("return");
+                    return;
+                }
+            }
+            severity = SentryAPI.Severity.Info;
+            break;
+        case "debug":
+            switch (String(GLOBAL.MENDIXLOGLEVEL)) {
+                case "CRITICAL": return;
+                case "ERROR": return;
+                case "WARNING": return;
+                case "INFO": return;
+            }
 
+            severity = SentryAPI.Severity.Debug;
+            break;
+        case "trace":
+            switch (String(GLOBAL.MENDIXLOGLEVEL)) {
+                case "CRITICAL": return;
+                case "ERROR": return;
+                case "WARNING": return;
+                case "INFO": return;
+                case "DEBUG": return;
+            }
+            severity = SentryAPI.Severity.Trace;
+            break;
+        default:
+            return;
+    }
+    SentryAPI.captureMessage(message, severity);
+}
 
 function initializeSentry(nativeConfiguration) {
     if (!nativeConfiguration.get('Enabled')) {
@@ -42,6 +96,7 @@ function initializeSentry(nativeConfiguration) {
     };
 
     GLOBAL.MENDIXLOGLEVEL = nativeConfiguration.get("LogLevel");
+    console.info("LOGLEVEL: " + GLOBAL.MENDIXLOGLEVEL);
 	if (!GLOBAL.MENDIXLOGLEVEL) {
         GLOBAL.MENDIXLOGLEVEL = "WARNING";
     }
@@ -58,75 +113,36 @@ function initializeSentry(nativeConfiguration) {
    
     SentryAPI.init(sentryConfig);
 
-    mx.logger.addHandler((level, message) => {
-        let severity = null;
-        switch(level) {
-            case "critical":
-                severity = SentryAPI.Severity.Critical;
-                break;
-            case "error":
-                switch (String(GLOBAL.MENDIXLOGLEVEL)) {
-                    case "CRITICAL": return;
-                }
-                severity = SentryAPI.Severity.Error;
-                break;
-            case "warning":
-                switch (String(GLOBAL.MENDIXLOGLEVEL)) {
-                    case "CRITICAL": return;
-                    case "ERROR": return;
-                }
-                severity = SentryAPI.Severity.Warning;
-                break;
-            case "info":
-                switch (String(GLOBAL.MENDIXLOGLEVEL)) {
-                    case "CRITICAL": return;
-                    case "ERROR": return;
-                    case "WARNING": return;
-                }
-                severity = SentryAPI.Severity.Info;
-                break;
-            case "debug":
-                switch (String(GLOBAL.MENDIXLOGLEVEL)) {
-                    case "CRITICAL": return;
-                    case "ERROR": return;
-                    case "WARNING": return;
-                    case "INFO": return;
-                }
-
-                severity = SentryAPI.Severity.Debug;
-                break;
-            case "trace":
-                switch (String(GLOBAL.MENDIXLOGLEVEL)) {
-                    case "CRITICAL": return;
-                    case "ERROR": return;
-                    case "WARNING": return;
-                    case "INFO": return;
-                    case "DEBUG": return;
-                }
-                severity = SentryAPI.Severity.Trace;
-                break;
-            default:
-                alert("[Sentry] Unknown level: " + level);
-                return;
+    if (typeof mx.logger.addHandler !== "undefined") {
+        mx.logger.addHandler((level, message) => {
+            logListener(level, message);
+        });
+    } else {
+        // 9.13-9.15 don't have mx.logger.addHandler anymore, overriding standard log
+        if (mx.logger.hasOwnProperty("_log")) {
+            return;
         }
-        SentryAPI.captureMessage(message, severity);
-    });
+        mx.logger._log = mx.logger.log;
+        mx.logger.log = function(level, ...messages) {
+            try {
+                const message = messages.map(m => m instanceof Error ? m.message + m.stack : String(m)).join(" ");
+                logListener(level, message);
+            } catch(e) {
+            }
+            let result = mx.logger._log.apply(this, arguments);
+            return result;
+        };
+    }
     
     mx._onError = mx.onError;
     mx.onError = function(e) {
-        debugger;
         SentryAPI.captureException(e, true);
         console.info("[Sentry] Exception catched!");
         mx._onError(e);
     }
-    
     console.info("[Sentry] Initialized..");
     
 }
-
-
-
-
 
 export class Sentry extends Component {
 
