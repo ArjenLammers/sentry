@@ -36,7 +36,7 @@ public class InitializeSentry extends CustomJavaAction<java.lang.Void>
 	@java.lang.Override
 	public java.lang.Void executeAction() throws Exception
 	{
-		this.config = __config == null ? null : sentry.proxies.RuntimeConfiguration.initialize(getContext(), __config);
+		this.config = this.__config == null ? null : sentry.proxies.RuntimeConfiguration.initialize(getContext(), __config);
 
 		// BEGIN USER CODE
 		URL url = new URL(Core.getConfiguration().getApplicationRootUrl());
@@ -87,6 +87,7 @@ public class InitializeSentry extends CustomJavaAction<java.lang.Void>
 
 	/**
 	 * Returns a string representation of this action
+	 * @return a string representation of this action
 	 */
 	@java.lang.Override
 	public java.lang.String toString()

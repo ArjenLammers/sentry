@@ -35,31 +35,30 @@ function logListener(level, message) {
             severity = SentryAPI.Severity.Critical;
             break;
         case "error":
-            switch (String(GLOBAL.MENDIXLOGLEVEL)) {
+            switch (String(window.MENDIXLOGLEVEL)) {
                 case "CRITICAL": return;
             }
             severity = SentryAPI.Severity.Error;
             break;
         case "warning":
-            switch (String(GLOBAL.MENDIXLOGLEVEL)) {
+            switch (String(window.MENDIXLOGLEVEL)) {
                 case "CRITICAL": return;
                 case "ERROR": return;
             }
             severity = SentryAPI.Severity.Warning;
             break;
         case "info":
-            switch (String(GLOBAL.MENDIXLOGLEVEL)) {
+            switch (String(window.MENDIXLOGLEVEL)) {
                 case "CRITICAL": return;
                 case "ERROR": return;
                 case "WARNING": {
-                    alert("return");
                     return;
                 }
             }
             severity = SentryAPI.Severity.Info;
             break;
         case "debug":
-            switch (String(GLOBAL.MENDIXLOGLEVEL)) {
+            switch (String(window.MENDIXLOGLEVEL)) {
                 case "CRITICAL": return;
                 case "ERROR": return;
                 case "WARNING": return;
@@ -69,7 +68,7 @@ function logListener(level, message) {
             severity = SentryAPI.Severity.Debug;
             break;
         case "trace":
-            switch (String(GLOBAL.MENDIXLOGLEVEL)) {
+            switch (String(window.MENDIXLOGLEVEL)) {
                 case "CRITICAL": return;
                 case "ERROR": return;
                 case "WARNING": return;
@@ -95,10 +94,10 @@ function initializeSentry(nativeConfiguration) {
         defaultIntegrations: false
     };
 
-    GLOBAL.MENDIXLOGLEVEL = nativeConfiguration.get("LogLevel");
-    console.info("LOGLEVEL: " + GLOBAL.MENDIXLOGLEVEL);
-	if (!GLOBAL.MENDIXLOGLEVEL) {
-        GLOBAL.MENDIXLOGLEVEL = "WARNING";
+    window.MENDIXLOGLEVEL = nativeConfiguration.get("LogLevel");
+    console.info("LOGLEVEL: " + window.MENDIXLOGLEVEL);
+	if (!window.MENDIXLOGLEVEL) {
+        window.MENDIXLOGLEVEL = "WARNING";
     }
     
     let additionalConfig = nativeConfiguration.get("Configuration");

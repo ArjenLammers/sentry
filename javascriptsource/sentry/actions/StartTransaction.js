@@ -5,6 +5,7 @@
 // - the code between BEGIN USER CODE and END USER CODE
 // - the code between BEGIN EXTRA CODE and END EXTRA CODE
 // Other code you write will be lost the next time you deploy the project.
+import "mx-global";
 import { Big } from "big.js";
 
 // BEGIN EXTRA CODE
@@ -21,14 +22,14 @@ import * as SentryTracing from "@sentry/tracing";
 export async function StartTransaction(name, op) {
 	// BEGIN USER CODE
 	var SentryAPI = null;
-	var SCOPE = null;
+	var SCOPE = window;
 
 	if (navigator && navigator.product === "ReactNative") {
-				SCOPE = GLOBAL;
+		// SCOPE = GLOBAL;
         SentryAPI = SentryRNAPI;
     } else {
-				SentryAPI = SentryWebAPI;
-				SCOPE = window;
+		SentryAPI = SentryWebAPI;
+		// SCOPE = window;
 	}
 
 	if (!SCOPE.hasOwnProperty("sentryTransactionChildren")) {

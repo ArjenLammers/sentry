@@ -6,8 +6,8 @@
 // - the code between BEGIN EXTRA CODE and END EXTRA CODE
 // Other code you write will be lost the next time you deploy the project.
 import { Big } from "big.js";
-import DeviceInfo from "react-native-device-info";
-import { getLocales, getCountry, getTimeZone, uses24HourClock } from "react-native-localize";
+import DeviceInfo from 'react-native-device-info';
+import { getLocales, getCountry, getTimeZone, uses24HourClock } from 'react-native-localize';
 
 // BEGIN EXTRA CODE
 // END EXTRA CODE
@@ -26,8 +26,11 @@ export async function GetDeviceInfo() {
         DeviceInfo.getTotalMemory(),
         DeviceInfo.getCarrier(),
         DeviceInfo.getManufacturer(),
-        DeviceInfo.getUserAgent()
-    ]).then(async ([mxObject, batteryLevel, fontScale, freeDiskStorage, totalDiskCapacity, totalMemory, carrier, manufacturer, userAgent]) => {
+        DeviceInfo.getUserAgent(),
+        DeviceInfo.getUniqueId(),
+        DeviceInfo.isEmulator(),
+        DeviceInfo.isLandscape()
+    ]).then(async ([mxObject, batteryLevel, fontScale, freeDiskStorage, totalDiskCapacity, totalMemory, carrier, manufacturer, userAgent, uniqueId, isEmulator, isLandscape]) => {
         const locales = getLocales();
         mxObject.set("ApplicationName", DeviceInfo.getApplicationName());
         mxObject.set("BatteryLevel", new Big(batteryLevel.toFixed(2)));
@@ -48,13 +51,13 @@ export async function GetDeviceInfo() {
         mxObject.set("Timezone", getTimeZone());
         mxObject.set("TotalDiskCapacity", new Big(totalDiskCapacity));
         mxObject.set("TotalMemory", new Big(totalMemory));
-        mxObject.set("UniqueId", DeviceInfo.getUniqueId());
+        mxObject.set("UniqueId", uniqueId);
         mxObject.set("UserAgent", userAgent);
         mxObject.set("Version", DeviceInfo.getVersion());
         mxObject.set("Is24Hour", uses24HourClock());
-        mxObject.set("IsEmulator", DeviceInfo.isEmulator());
+        mxObject.set("IsEmulator", isEmulator);
         mxObject.set("IsTablet", DeviceInfo.isTablet());
-        mxObject.set("IsLandscape", DeviceInfo.isLandscape());
+        mxObject.set("IsLandscape", isLandscape);
         mxObject.set("HasNotch", DeviceInfo.hasNotch());
         return mxObject;
     });

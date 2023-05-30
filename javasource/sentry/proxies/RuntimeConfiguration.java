@@ -31,7 +31,7 @@ public class RuntimeConfiguration
 		DiagnosticLevel("DiagnosticLevel"),
 		LogLevel("LogLevel");
 
-		private java.lang.String metaName;
+		private final java.lang.String metaName;
 
 		MemberNames(java.lang.String s)
 		{
@@ -47,15 +47,17 @@ public class RuntimeConfiguration
 
 	public RuntimeConfiguration(com.mendix.systemwideinterfaces.core.IContext context)
 	{
-		this(context, com.mendix.core.Core.instantiate(context, "Sentry.RuntimeConfiguration"));
+		this(context, com.mendix.core.Core.instantiate(context, entityName));
 	}
 
 	protected RuntimeConfiguration(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixObject runtimeConfigurationMendixObject)
 	{
-		if (runtimeConfigurationMendixObject == null)
+		if (runtimeConfigurationMendixObject == null) {
 			throw new java.lang.IllegalArgumentException("The given object cannot be null.");
-		if (!com.mendix.core.Core.isSubClassOf("Sentry.RuntimeConfiguration", runtimeConfigurationMendixObject.getType()))
-			throw new java.lang.IllegalArgumentException("The given object is not a Sentry.RuntimeConfiguration");
+		}
+		if (!com.mendix.core.Core.isSubClassOf(entityName, runtimeConfigurationMendixObject.getType())) {
+			throw new java.lang.IllegalArgumentException(String.format("The given object is not a %s", entityName));
+		}	
 
 		this.runtimeConfigurationMendixObject = runtimeConfigurationMendixObject;
 		this.context = context;
@@ -73,6 +75,9 @@ public class RuntimeConfiguration
 	/**
 	 * Initialize a proxy using context (recommended). This context will be used for security checking when the get- and set-methods without context parameters are called.
 	 * The get- and set-methods with context parameter should be used when for instance sudo access is necessary (IContext.createSudoClone() can be used to obtain sudo access).
+	 * @param context The context to be used
+	 * @param mendixObject The Mendix object for the new instance
+	 * @return a new instance of this proxy class
 	 */
 	public static sentry.proxies.RuntimeConfiguration initialize(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixObject mendixObject)
 	{
@@ -87,14 +92,16 @@ public class RuntimeConfiguration
 
 	public static java.util.List<sentry.proxies.RuntimeConfiguration> load(com.mendix.systemwideinterfaces.core.IContext context, java.lang.String xpathConstraint) throws com.mendix.core.CoreException
 	{
-		java.util.List<sentry.proxies.RuntimeConfiguration> result = new java.util.ArrayList<sentry.proxies.RuntimeConfiguration>();
-		for (com.mendix.systemwideinterfaces.core.IMendixObject obj : com.mendix.core.Core.retrieveXPathQuery(context, "//Sentry.RuntimeConfiguration" + xpathConstraint))
-			result.add(sentry.proxies.RuntimeConfiguration.initialize(context, obj));
-		return result;
+		return com.mendix.core.Core.createXPathQuery(String.format("//%1$s%2$s", entityName, xpathConstraint))
+			.execute(context)
+			.stream()
+			.map(obj -> sentry.proxies.RuntimeConfiguration.initialize(context, obj))
+			.collect(java.util.stream.Collectors.toList());
 	}
 
 	/**
 	 * Commit the changes made on this proxy object.
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final void commit() throws com.mendix.core.CoreException
 	{
@@ -103,6 +110,7 @@ public class RuntimeConfiguration
 
 	/**
 	 * Commit the changes made on this proxy object using the specified context.
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final void commit(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
 	{
@@ -428,9 +436,9 @@ public class RuntimeConfiguration
 	public final sentry.proxies.SentryLevel getDiagnosticLevel(com.mendix.systemwideinterfaces.core.IContext context)
 	{
 		Object obj = getMendixObject().getValue(context, MemberNames.DiagnosticLevel.toString());
-		if (obj == null)
+		if (obj == null) {
 			return null;
-
+		}
 		return sentry.proxies.SentryLevel.valueOf((java.lang.String) obj);
 	}
 
@@ -450,10 +458,11 @@ public class RuntimeConfiguration
 	 */
 	public final void setDiagnosticLevel(com.mendix.systemwideinterfaces.core.IContext context, sentry.proxies.SentryLevel diagnosticlevel)
 	{
-		if (diagnosticlevel != null)
+		if (diagnosticlevel != null) {
 			getMendixObject().setValue(context, MemberNames.DiagnosticLevel.toString(), diagnosticlevel.toString());
-		else
+		} else {
 			getMendixObject().setValue(context, MemberNames.DiagnosticLevel.toString(), null);
+		}
 	}
 
 	/**
@@ -472,9 +481,9 @@ public class RuntimeConfiguration
 	public final sentry.proxies.MendixLogLevel getLogLevel(com.mendix.systemwideinterfaces.core.IContext context)
 	{
 		Object obj = getMendixObject().getValue(context, MemberNames.LogLevel.toString());
-		if (obj == null)
+		if (obj == null) {
 			return null;
-
+		}
 		return sentry.proxies.MendixLogLevel.valueOf((java.lang.String) obj);
 	}
 
@@ -494,10 +503,11 @@ public class RuntimeConfiguration
 	 */
 	public final void setLogLevel(com.mendix.systemwideinterfaces.core.IContext context, sentry.proxies.MendixLogLevel loglevel)
 	{
-		if (loglevel != null)
+		if (loglevel != null) {
 			getMendixObject().setValue(context, MemberNames.LogLevel.toString(), loglevel.toString());
-		else
+		} else {
 			getMendixObject().setValue(context, MemberNames.LogLevel.toString(), null);
+		}
 	}
 
 	/**
@@ -519,9 +529,9 @@ public class RuntimeConfiguration
 	@java.lang.Override
 	public boolean equals(Object obj)
 	{
-		if (obj == this)
+		if (obj == this) {
 			return true;
-
+		}
 		if (obj != null && getClass().equals(obj.getClass()))
 		{
 			final sentry.proxies.RuntimeConfiguration that = (sentry.proxies.RuntimeConfiguration) obj;
@@ -541,7 +551,7 @@ public class RuntimeConfiguration
 	 */
 	public static java.lang.String getType()
 	{
-		return "Sentry.RuntimeConfiguration";
+		return entityName;
 	}
 
 	/**
